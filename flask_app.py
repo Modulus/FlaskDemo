@@ -1,18 +1,19 @@
 #coding : utf-8
 from datetime import datetime
 from flask import Flask, request, jsonify
+from flask.ext.pymongo import PyMongo
 from pymongo import MongoClient
 import hashlib
 from user import User
 
 
 app = Flask(__name__)
+app.config["MONGO_DBNAME"] = "demo"
+mongo = PyMongo(app, config_prefix="MONGO")
 
-client = MongoClient()
 #Same as client = MongoClient('localhost', 27017)
 #Or client = MongoClient('mongodb://localhost:27017/')
 
-db = client.demo
 
 @app.route('/')
 def helloWorld():
@@ -27,13 +28,13 @@ def handleUser(user_id):
     elif request.method == "DELTE":
         return "Delete called on user with id "+user_id
     elif request.method == "GET":
-        existingUser = db.users.find_one({"_id": user_id})
+        existingUser = mongo.db.users.find_one({"_id": user_id})
         return existingUser
 
 @app.route("/users", methods=["GET"])
 def getAllUsers():
     users = []
-    for user_dict in db.users.find():
+    for user_dict in mongo.db.users.find():
         app.logger.debug(user_dict)
         user = User(
             firstName=user_dict["firstName"], lastName=user_dict["lastName"],
@@ -43,7 +44,7 @@ def getAllUsers():
         user.created = user_dict["created"]
         users.append(user_dict)
 
-    return "Not working atm"
+    return users[1]
 
 
 @app.route("/user", methods=["POST"])
@@ -55,7 +56,7 @@ def addUser():
     created = datetime.now()
 
     user = User(userName=userName, firstName=firstName, lastName=lastName, password=password, created=created)
-    id = db.users.insert(user.json())
+    id = mongo.db.users.insert(user.json())
     user._id = id
     return jsonify(user.json())
 
