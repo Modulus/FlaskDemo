@@ -25,10 +25,26 @@ def handleUser(user_id):
     if request.method == "PUT":
         return "Put called on user with id "+user_id
     elif request.method == "DELTE":
-        return "Delete called on user with id "+ user_id
+        return "Delete called on user with id "+user_id
     elif request.method == "GET":
-        existingUser =  db.users.find_one({"_id": user_id})
-        return existingUser.firstName
+        existingUser = db.users.find_one({"_id": user_id})
+        return existingUser
+
+@app.route("/users", methods=["GET"])
+def getAllUsers():
+    users = []
+    for user_dict in db.users.find():
+        app.logger.debug(user_dict)
+        user = User(
+            firstName=user_dict["firstName"], lastName=user_dict["lastName"],
+            userName=user_dict["userName"], password=user_dict["password"]
+        )
+        user._id = str(user_dict["_id"])
+        user.created = user_dict["created"]
+        users.append(user_dict)
+
+    return "Not working atm"
+
 
 @app.route("/user", methods=["POST"])
 def addUser():
@@ -44,18 +60,25 @@ def addUser():
     return jsonify(user.json())
 
 
+@app.route("/messages/<user_id>/", methods=["GET"])
+def getAllMesages(user_id):
+    return "User messages for user id: "+user_id
 
-# @app.route("/message/<message_id", methods=["DELETE"])
+
+@app.route("/message", methods=["POST"])
+def postMessage():
+    pass
+
+
+
+# @app.route("/message/", methods=["DELETE"])
 # def deleteMessage():
 #     pass
 #
-# @app.route("/message/<message_id", methods=["PUT"])
+# @app.route("/message/<message_id>", methods=["PUT"])
 # def putMessage():
 #     pass
-#
-# @app.route("/message", methods=["POST"])
-# def postMessage():
-#     pass
+
 
 
 if __name__ == '__main__':
