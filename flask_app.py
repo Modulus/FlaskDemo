@@ -1,6 +1,8 @@
 #coding : utf-8
 from datetime import datetime
-from flask import Flask, request, jsonify
+import json
+from bson import ObjectId
+from flask import Flask, request, jsonify, make_response
 from flask.ext.pymongo import PyMongo
 from pymongo import MongoClient
 import hashlib
@@ -28,23 +30,19 @@ def handleUser(user_id):
     elif request.method == "DELTE":
         return "Delete called on user with id "+user_id
     elif request.method == "GET":
-        existingUser = mongo.db.users.find_one({"_id": user_id})
-        return existingUser
+        existingUser = mongo.db.users.find_one({"_id": ObjectId(user_id)})
+        existingUser["_id"] = str(existingUser["_id"])
+        return jsonify(existingUser)
 
 @app.route("/users", methods=["GET"])
 def getAllUsers():
     users = []
-    for user_dict in mongo.db.users.find():
-        app.logger.debug(user_dict)
-        user = User(
-            firstName=user_dict["firstName"], lastName=user_dict["lastName"],
-            userName=user_dict["userName"], password=user_dict["password"]
-        )
-        user._id = str(user_dict["_id"])
-        user.created = user_dict["created"]
-        users.append(user_dict)
+    for user in mongo.db.users.find():
+        app.logger.debug(user)
+        user["_id"] = str(user["_id"])
+        users.append(user)
 
-    return users[1]
+    return jsonify(users=users)
 
 
 @app.route("/user", methods=["POST"])
@@ -63,7 +61,23 @@ def addUser():
 
 @app.route("/messages/<user_id>/", methods=["GET"])
 def getAllMesages(user_id):
-    return "User messages for user id: "+user_id
+    app.logger.debug("Fetching messages for user_id"+user_id)
+    messages = []
+    for message in mongo.db.messages.find({"sender": ObjectId(user_id)}):
+        message["_id"] = str(message["_id"])
+        message["sender"] = str(message["sender"])
+        message["receiver"] = str(message["receiver"])
+        messages.append(message)
+
+    for message in mongo.db.messages.find({"receiver": ObjectId(user_id)}):
+        message["_id"] = str(message["_id"])
+        message["sender"] = str(message["sender"])
+        message["receiver"] = str(message["receiver"])
+        messages.append(message)
+
+    return jsonify(results=messages)
+
+
 
 
 @app.route("/message", methods=["POST"])
