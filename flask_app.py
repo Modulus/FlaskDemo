@@ -1,7 +1,7 @@
 #coding : utf-8
 from datetime import datetime
 from bson import ObjectId
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, abort
 from flask.ext.pymongo import PyMongo
 from models.message import Message
 
@@ -24,14 +24,27 @@ def helloWorld():
 @app.route("/user/<user_id>", methods=["GET", "PUT", "DELETE"])
 def handleUser(user_id):
     app.logger.debug("Handling user")
+
     if request.method == "PUT":
         return "Put called on user with id "+user_id
-    elif request.method == "DELTE":
-        return "Delete called on user with id "+user_id
+
+    elif request.method == "DELETE":
+        user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
+        if user is not None:
+            app.logger.debug("Delete called on user with id [{userid}]".format(userid=user["_id"]))
+            mongo.db.users.remove({"_id": ObjectId(user["_id"])})
+            user["_id"] = str(user["_id"])
+            return jsonify(user)
+        else:
+            return jsonify({"Message": "Non existing user"})
+
     elif request.method == "GET":
         existingUser = mongo.db.users.find_one({"_id": ObjectId(user_id)})
-        existingUser["_id"] = str(existingUser["_id"])
-        return jsonify(existingUser)
+        if existingUser is not None:
+            existingUser["_id"] = str(existingUser["_id"])
+            return jsonify(existingUser)
+        else:
+            return jsonify({"Message": "Non existing user"})
 
 @app.route("/users", methods=["GET"])
 def getAllUsers():
@@ -52,10 +65,15 @@ def addUser():
     password = request.form["password"]
     created = datetime.now()
 
-    user = User(userName=userName, firstName=firstName, lastName=lastName, password=password, created=created)
-    id = mongo.db.users.insert(user.json())
-    user._id = id
-    return jsonify(user.json())
+    existingUser = mongo.db.users.find({"userName": userName})
+
+    if existingUser is None:
+        user = User(userName=userName, firstName=firstName, lastName=lastName, password=password, created=created)
+        id = mongo.db.users.insert(user.json())
+        user._id = id
+        return jsonify(user.json())
+    else:
+        return jsonify({"message"  "User allready exists"})
 
 
 @app.route("/user/<user_id>/messages", methods=["GET"])
