@@ -1,12 +1,11 @@
 #coding : utf-8
 from datetime import datetime
-import json
 from bson import ObjectId
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify
 from flask.ext.pymongo import PyMongo
-from pymongo import MongoClient
-import hashlib
-from user import User
+from models.message import Message
+
+from models.user import User
 
 
 app = Flask(__name__)
@@ -16,10 +15,10 @@ mongo = PyMongo(app, config_prefix="MONGO")
 #Same as client = MongoClient('localhost', 27017)
 #Or client = MongoClient('mongodb://localhost:27017/')
 
-
 @app.route('/')
 def helloWorld():
-    return 'Welome to the demo!'
+    return jsonify({"header": "Welcome to the demo!", "message":
+                    "This will show simple usage of Python Flask and Pymongo"})
 
 
 @app.route("/user/<user_id>", methods=["GET", "PUT", "DELETE"])
@@ -59,21 +58,30 @@ def addUser():
     return jsonify(user.json())
 
 
-@app.route("/messages/<user_id>/", methods=["GET"])
-def getAllMesages(user_id):
+@app.route("/user/<user_id>/messages", methods=["GET"])
+def getAllMessages(user_id):
     app.logger.debug("Fetching messages for user_id"+user_id)
     messages = []
-    for message in mongo.db.messages.find({"sender": ObjectId(user_id)}):
+
+    #Compact way of query
+    for message in mongo.db.messages.find({"$or": [{"sender": ObjectId(user_id)}, {"receiver": ObjectId(user_id)}]}):
         message["_id"] = str(message["_id"])
         message["sender"] = str(message["sender"])
         message["receiver"] = str(message["receiver"])
         messages.append(message)
 
-    for message in mongo.db.messages.find({"receiver": ObjectId(user_id)}):
-        message["_id"] = str(message["_id"])
-        message["sender"] = str(message["sender"])
-        message["receiver"] = str(message["receiver"])
-        messages.append(message)
+    # Straight forward way
+    # for message in mongo.db.messages.find({"sender": ObjectId(user_id)}):
+    #     message["_id"] = str(message["_id"])
+    #     message["sender"] = str(message["sender"])
+    #     message["receiver"] = str(message["receiver"])
+    #     messages.append(message)
+    #
+    # for message in mongo.db.messages.find({"receiver": ObjectId(user_id)}):
+    #     message["_id"] = str(message["_id"])
+    #     message["sender"] = str(message["sender"])
+    #     message["receiver"] = str(message["receiver"])
+    #     messages.append(message)
 
     return jsonify(results=messages)
 
@@ -82,7 +90,14 @@ def getAllMesages(user_id):
 
 @app.route("/message", methods=["POST"])
 def postMessage():
-    pass
+    senderId = request.form["senderid"]
+    receiverId = request.form["receiverid"]
+    subject = request.form["subject"]
+    text = request.form["text"]
+
+    message = Message(sender=senderId, receiver=receiverId, subject=subject, message=text, sent=datetime.now())
+
+    return jsonify(message)
 
 
 
@@ -93,8 +108,6 @@ def postMessage():
 # @app.route("/message/<message_id>", methods=["PUT"])
 # def putMessage():
 #     pass
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)

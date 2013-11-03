@@ -1,7 +1,7 @@
 from datetime import datetime
 from pymongo import MongoClient
-from message import Message
-from user import User
+from models.message import Message
+from models.user import User
 
 __author__ = 'john'
 

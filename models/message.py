@@ -9,7 +9,7 @@ class Message(object):
         self.subject = kwargs["subject"]
         self.message = kwargs["message"]
         self.receiver = kwargs["receiver"]
-        self.sent = datetime.now()
+        self.sent = kwargs["sent"]
         self.read = False
 
     def json(self):

@@ -12,17 +12,17 @@ class User(object):
         self.created = None
 
     def json(self):
-        if self._id:
-            return {
-                {
-                    "id": self._id,
-                    "firstName": self.firstName,
-                    "lastName": self.lastName,
-                    "userName": self.userName,
-                    "password": self.password,
-                    "created": self.created
-                }
-            }
+        # if self._id:
+        #     return {
+        #         {
+        #             "id": self._id,
+        #             "firstName": self.firstName,
+        #             "lastName": self.lastName,
+        #             "userName": self.userName,
+        #             "password": self.password,
+        #             "created": self.created
+        #         }
+        #     }
         return \
             {
                 "firstName": self.firstName,
