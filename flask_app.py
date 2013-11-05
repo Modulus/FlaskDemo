@@ -1,9 +1,9 @@
 #coding : utf-8
 from datetime import datetime
 import os
-from bcryptor import Bcrypt
+from hashlib import sha512
 from bson import ObjectId
-from flask import Flask, request, jsonify, abort
+from flask import Flask, request, jsonify
 from flask.ext.pymongo import PyMongo
 from models.message import Message
 
@@ -70,8 +70,7 @@ def addUser():
     lastName = request.form["lastname"]
     password = request.form["password"]
     created = datetime.now()
-    crypto = Bcrypt()
-    hash = crypto.create(password, 12, False)
+    hash = sha512(password).hexdigest()
 
     existingUser = mongo.db.users.find({"userName": userName})
 
@@ -96,22 +95,17 @@ def getAllMessages(user_id):
         message["receiver"] = str(message["receiver"])
         messages.append(message)
 
-    # Straight forward way
-    # for message in mongo.db.messages.find({"sender": ObjectId(user_id)}):
-    #     message["_id"] = str(message["_id"])
-    #     message["sender"] = str(message["sender"])
-    #     message["receiver"] = str(message["receiver"])
-    #     messages.append(message)
-    #
-    # for message in mongo.db.messages.find({"receiver": ObjectId(user_id)}):
-    #     message["_id"] = str(message["_id"])
-    #     message["sender"] = str(message["sender"])
-    #     message["receiver"] = str(message["receiver"])
-    #     messages.append(message)
-
     return jsonify(results=messages)
 
+@app.route("/user/<user_id>/message/<message_id>", methods=["GET"])
+def getMessage(user_id, message_id):
+    message = mongo.db.messages.find_one({"$and" : [{"sender": ObjectId(user_id)}, {"_id": ObjectId(message_id)}] })
 
+    message["_id"] = str(message["_id"])
+    message["sender"] = str(message["sender"])
+    message["receiver"] = str(message["receiver"])
+
+    return jsonify(message)
 
 
 @app.route("/message", methods=["POST"])
@@ -125,15 +119,16 @@ def postMessage():
 
     return jsonify(message)
 
-
-
 # @app.route("/message/", methods=["DELETE"])
 # def deleteMessage():
 #     pass
 #
-# @app.route("/message/<message_id>", methods=["PUT"])
-# def putMessage():
-#     pass
+@app.route("/user/<user_id>/message/<message_id>", methods=["PUT"])
+def putMessage(user_id, message_id):
+    message = request.form["message"]
+    senderId = request.form["senderid"]
+
+    x = 10
 
 if __name__ == '__main__':
     app.run(debug=True)

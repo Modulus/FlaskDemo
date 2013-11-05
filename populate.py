@@ -1,8 +1,8 @@
 from datetime import datetime
-from bcryptor import bcrypt
 from pymongo import MongoClient
 from models.message import Message
 from models.user import User
+from hashlib import sha512
 
 __author__ = 'john'
 
@@ -13,18 +13,17 @@ class Populator(object):
         db = client.demo
         db.users.drop()
         db.messages.drop()
-        crypto = bcrypt.Bcrypt()
 
-        u1 = User(firstName="John", lastName="Doe", userName="John1", password=crypto.create("1234password", 12, False))
+        u1 = User(firstName="John", lastName="Doe", userName="John1", password=sha512("1234password").hexdigest())
         u1.created = datetime.now()
 
-        u2 = User(firstName="Jane", lastName="Doe", userName="Jane", password=crypto.create("mypassw0rd", 12, False))
+        u2 = User(firstName="Jane", lastName="Doe", userName="Jane", password=sha512("mypassw0rd").hexdigest())
         u2.created = datetime.now()
 
-        u3 = User(firstName="Kristel", lastName="Nielsen", userName="Kristel", password=crypto.create("asdfda3", 12, False))
+        u3 = User(firstName="Kristel", lastName="Nielsen", userName="Kristel", password=sha512("asdfda3").hexdigest())
         u3.created = datetime.now()
 
-        u4 = User(firstName="Erik", lastName="Johannesen", userName="Erik", password=crypto.create("kjasdfj8i32", 12, False))
+        u4 = User(firstName="Erik", lastName="Johannesen", userName="Erik", password=sha512("kjasdfj8i32").hexdigest())
         u4.created = datetime.now()
 
         u1._id = db.users.insert(u1.json())
