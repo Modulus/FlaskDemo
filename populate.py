@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 from pymongo import MongoClient
 from models.message import Message
 from models.user import User
@@ -9,7 +10,12 @@ __author__ = 'john'
 
 class Populator(object):
     def run(self):
-        client = MongoClient()
+
+        MONGO_URL = os.environ.get('MONGOHQ_URL')
+        if MONGO_URL:
+            client = MongoClient(MONGO_URL)
+        else:
+            client = MongoClient()
         db = client.demo
         db.users.drop()
         db.messages.drop()
