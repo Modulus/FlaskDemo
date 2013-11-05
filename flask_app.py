@@ -1,5 +1,6 @@
 #coding : utf-8
 from datetime import datetime
+import os
 from bcryptor import Bcrypt
 from bson import ObjectId
 from flask import Flask, request, jsonify, abort
@@ -8,9 +9,13 @@ from models.message import Message
 
 from models.user import User
 
+#MongoHQ url on heroku
+MONGO_URL = os.environ.get('MONGOHQ_URL')
 
 app = Flask(__name__)
 app.config["MONGO_DBNAME"] = "demo"
+if MONGO_URL:
+    app.confi["MONGO_URI"] = MONGO_URL
 mongo = PyMongo(app, config_prefix="MONGO")
 
 #Same as client = MongoClient('localhost', 27017)
