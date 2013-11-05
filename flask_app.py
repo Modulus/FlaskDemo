@@ -1,5 +1,6 @@
 #coding : utf-8
 from datetime import datetime
+from bcryptor import Bcrypt
 from bson import ObjectId
 from flask import Flask, request, jsonify, abort
 from flask.ext.pymongo import PyMongo
@@ -64,11 +65,13 @@ def addUser():
     lastName = request.form["lastname"]
     password = request.form["password"]
     created = datetime.now()
+    crypto = Bcrypt()
+    hash = crypto.create(password, 12, False)
 
     existingUser = mongo.db.users.find({"userName": userName})
 
     if existingUser is None:
-        user = User(userName=userName, firstName=firstName, lastName=lastName, password=password, created=created)
+        user = User(userName=userName, firstName=firstName, lastName=lastName, password=hash, created=created)
         id = mongo.db.users.insert(user.json())
         user._id = id
         return jsonify(user.json())

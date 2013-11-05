@@ -2,3 +2,7 @@
 *.pyc
 idea
 *.iml
+out
+__pycache__
+venv
+fix

@@ -1,4 +1,5 @@
 from datetime import datetime
+from bcryptor import bcrypt
 from pymongo import MongoClient
 from models.message import Message
 from models.user import User
@@ -12,17 +13,18 @@ class Populator(object):
         db = client.demo
         db.users.drop()
         db.messages.drop()
+        crypto = bcrypt.Bcrypt()
 
-        u1 = User(firstName="John", lastName="Doe", userName="John1", password="1234password")
+        u1 = User(firstName="John", lastName="Doe", userName="John1", password=crypto.create("1234password", 12, False))
         u1.created = datetime.now()
 
-        u2 = User(firstName="Jane", lastName="Doe", userName="Jane", password="mypassw0rd")
+        u2 = User(firstName="Jane", lastName="Doe", userName="Jane", password=crypto.create("mypassw0rd", 12, False))
         u2.created = datetime.now()
 
-        u3 = User(firstName="Kristel", lastName="Nielsen", userName="Kristel", password="asdfda3")
+        u3 = User(firstName="Kristel", lastName="Nielsen", userName="Kristel", password=crypto.create("asdfda3", 12, False))
         u3.created = datetime.now()
 
-        u4 = User(firstName="Erik", lastName="Johannesen", userName="Erik", password="kjasdfj8i32")
+        u4 = User(firstName="Erik", lastName="Johannesen", userName="Erik", password=crypto.create("kjasdfj8i32", 12, False))
         u4.created = datetime.now()
 
         u1._id = db.users.insert(u1.json())
@@ -33,31 +35,36 @@ class Populator(object):
         m1 = Message(
             sender=u1._id, subject="First message",
             message="This is the first ever message in the system?!",
-            receiver=u4._id
+            receiver=u4._id,
+            sent=datetime.now()
         )
 
         m2 = Message(
             sender=u4._id, subject="RE: First message",
             message="It's awesome isn't it?",
-            receiver=u1._id
+            receiver=u1._id,
+            sent=datetime.now()
         )
 
         m3 = Message(
             sender=u2._id, subject="Remember, remember",
             message="Remember to buy milk!!!!!!",
-            receiver=u2._id
+            receiver=u2._id,
+            sent=datetime.now()
         )
 
         m4 = Message(
             sender=u3._id, subject="New project",
             message="We need an extra developer for a new ruby project, are you in?",
-            receiver=u2._id
+            receiver=u2._id,
+            sent=datetime.now()
         )
 
         m5 = Message(
             sender=u2._id, subject="RE: New project",
             message="Sure why not, could we have a look at sinatra in that case?",
-            receiver=u4._id
+            receiver=u4._id,
+            sent=datetime.now()
         )
 
         m1._id = db.messages.insert(m1.json())
