@@ -15,7 +15,7 @@ MONGO_URL = os.environ.get('MONGOHQ_URL')
 app = Flask(__name__)
 app.config["MONGO_DBNAME"] = "demo"
 if MONGO_URL:
-    app.confi["MONGO_URI"] = MONGO_URL
+    app.config["MONGO_URI"] = MONGO_URL
 mongo = PyMongo(app, config_prefix="MONGO")
 
 #Same as client = MongoClient('localhost', 27017)

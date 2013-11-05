@@ -1,11 +1,9 @@
-Cython==0.19.2
 Flask==0.10.1
 Flask-PyMongo==0.3.0
 Jinja2==2.7.1
 MarkupSafe==0.18
 Werkzeug==0.9.4
 Yamlog==0.9
-bcryptor==1.2.2
 gunicorn==18.0
 itsdangerous==0.23
 pymongo==2.6.3
