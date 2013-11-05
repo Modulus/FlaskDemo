@@ -19,15 +19,15 @@ class Populator(object):
         u1.created = datetime.now()
 
         u2 = User(firstName="Jane", lastName="Doe", userName="Jane",
-                  password=bcrypt("mypassw0rd", bcrypt.gensalt()))
+                  password=bcrypt.hashpw("mypassw0rd", bcrypt.gensalt()))
         u2.created = datetime.now()
 
         u3 = User(firstName="Kristel", lastName="Nielsen", userName="Kristel",
-                  password=bcrypt("asdfda3", bcrypt.gensalt()))
+                  password=bcrypt.hashpw("asdfda3", bcrypt.gensalt()))
         u3.created = datetime.now()
 
         u4 = User(firstName="Erik", lastName="Johannesen", userName="Erik",
-                  password=bcrypt("kjasdfj8i32", bcrypt.gensalt()))
+                  password=bcrypt.hashpw("kjasdfj8i32", bcrypt.gensalt()))
         u4.created = datetime.now()
 
         u1._id = db.users.insert(u1.json())
