@@ -7,4 +7,5 @@ Yamlog==0.9
 gunicorn==18.0
 itsdangerous==0.23
 pymongo==2.6.3
+python-bcrypt==0.3.2
 wsgiref==0.1.2

@@ -6,7 +6,7 @@ from bson import ObjectId
 from flask import Flask, request, jsonify
 from flask.ext.pymongo import PyMongo
 from models.message import Message
-
+import bcrypt
 from models.user import User
 
 #MongoHQ url on heroku
@@ -70,7 +70,7 @@ def addUser():
     lastName = request.form["lastname"]
     password = request.form["password"]
     created = datetime.now()
-    hash = sha512(password).hexdigest()
+    hash = bcrypt.hashpw(password, bcrypt.gensalt())
 
     existingUser = mongo.db.users.find({"userName": userName})
 

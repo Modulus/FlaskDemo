@@ -2,7 +2,7 @@ from datetime import datetime
 from pymongo import MongoClient
 from models.message import Message
 from models.user import User
-from hashlib import sha512
+import bcrypt
 
 __author__ = 'john'
 
@@ -14,16 +14,20 @@ class Populator(object):
         db.users.drop()
         db.messages.drop()
 
-        u1 = User(firstName="John", lastName="Doe", userName="John1", password=sha512("1234password").hexdigest())
+        u1 = User(firstName="John", lastName="Doe", userName="John1",
+                  password=bcrypt.hashpw("1234password", bcrypt.gensalt()))
         u1.created = datetime.now()
 
-        u2 = User(firstName="Jane", lastName="Doe", userName="Jane", password=sha512("mypassw0rd").hexdigest())
+        u2 = User(firstName="Jane", lastName="Doe", userName="Jane",
+                  password=bcrypt("mypassw0rd", bcrypt.gensalt()))
         u2.created = datetime.now()
 
-        u3 = User(firstName="Kristel", lastName="Nielsen", userName="Kristel", password=sha512("asdfda3").hexdigest())
+        u3 = User(firstName="Kristel", lastName="Nielsen", userName="Kristel",
+                  password=bcrypt("asdfda3", bcrypt.gensalt()))
         u3.created = datetime.now()
 
-        u4 = User(firstName="Erik", lastName="Johannesen", userName="Erik", password=sha512("kjasdfj8i32").hexdigest())
+        u4 = User(firstName="Erik", lastName="Johannesen", userName="Erik",
+                  password=bcrypt("kjasdfj8i32", bcrypt.gensalt()))
         u4.created = datetime.now()
 
         u1._id = db.users.insert(u1.json())

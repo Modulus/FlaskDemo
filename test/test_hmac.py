@@ -3,6 +3,7 @@ from hashlib import sha512
 import hmac
 import binascii
 import binhex
+import bcrypt
 
 __author__ = 'modulus'
 
@@ -27,3 +28,11 @@ class TestHmac(TestCase):
 
         sha2 = sha512("password")
         print sha.hexdigest() == sha2.hexdigest()
+
+    def test(self):
+
+        hash1 = bcrypt.hashpw("Jadda", bcrypt.gensalt())
+        hash2 = bcrypt.hashpw("Jadda", hash1)
+
+        print hash1
+        print hash1 == hash2
