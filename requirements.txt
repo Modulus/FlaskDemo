@@ -6,7 +6,6 @@ MarkupSafe==0.18
 Werkzeug==0.9.4
 Yamlog==0.9
 bcryptor==1.2.2
-distribute==0.7.3
 gunicorn==18.0
 itsdangerous==0.23
 pymongo==2.6.3
