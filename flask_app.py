@@ -1,7 +1,8 @@
 #coding : utf-8
 from datetime import datetime
 import os
-from hashlib import sha512
+import logging
+import sys
 from bson import ObjectId
 from flask import Flask, request, jsonify
 from flask.ext.pymongo import PyMongo
@@ -16,6 +17,17 @@ app = Flask(__name__)
 app.config["MONGO_DBNAME"] = "demo"
 if MONGO_URL:
     app.config["MONGO_URI"] = MONGO_URL
+
+    #Configure logger for heroku
+
+    root = logging.getLogger()
+
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    ch.setFormatter(formatter)
+    root.addHandler(ch)
+
 mongo = PyMongo(app, config_prefix="MONGO")
 
 #Same as client = MongoClient('localhost', 27017)
@@ -65,6 +77,8 @@ def getAllUsers():
 
 @app.route("/user", methods=["POST"])
 def addUser():
+    logger = logging.getLogger()
+    logger.debug("Adding user")
     userName = request.form["username"]
     firstName = request.form["firstname"]
     lastName = request.form["lastname"]
@@ -128,7 +142,7 @@ def putMessage(user_id, message_id):
     message = request.form["message"]
     senderId = request.form["senderid"]
 
-    x = 10
+
 
 if __name__ == '__main__':
     app.run(debug=True)
