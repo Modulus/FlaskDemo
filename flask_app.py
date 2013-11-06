@@ -62,7 +62,7 @@ def handleUser(user_id):
 @app.route("/users", methods=["GET"])
 def getAllUsers():
     users = []
-    logger = logging.getLogger()
+    logger = logging.getLogger("UserLogger")
     logger.debug("Getting users")
     for user in mongo.db.users.find():
         logger.debug(user)
