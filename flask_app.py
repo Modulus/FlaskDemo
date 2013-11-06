@@ -89,8 +89,9 @@ def addUser():
 
     logger.debug("Hashing finished")
     logger.debug("Trying to find existing user")
-    existingUser = mongo.db.users.find({"userName": userName})
-    logger.debug(jsonify(existingUser))
+    existingUser = mongo.db.users.find_one({"userName": userName})
+    if existingUser:
+        logger.debug(existingUser["userName"])
     logger.debug("After user")
 
     if existingUser is None:
