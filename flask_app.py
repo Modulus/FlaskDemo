@@ -98,7 +98,7 @@ def addUser():
         user._id = id
         return jsonify(user.json())
     else:
-        return jsonify({"message"  "User allready exists"})
+        return jsonify({"message" : "User allready exists"})
 
 
 @app.route("/user/<user_id>/messages", methods=["GET"])
