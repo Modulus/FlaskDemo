@@ -20,13 +20,8 @@ if MONGO_URL:
 
     #Configure logger for heroku
 
-    root = logging.getLogger()
-
-    ch = logging.StreamHandler(sys.stdout)
-    ch.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    ch.setFormatter(formatter)
-    root.addHandler(ch)
+    logging.basicConfig(stream=sys.stdout, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+                        level=logging.DEBUG)
 
 mongo = PyMongo(app, config_prefix="MONGO")
 
@@ -67,8 +62,10 @@ def handleUser(user_id):
 @app.route("/users", methods=["GET"])
 def getAllUsers():
     users = []
+    logger = logging.getLogger()
+    logger.debug("Getting users")
     for user in mongo.db.users.find():
-        app.logger.debug(user)
+        logger.debug(user)
         user["_id"] = str(user["_id"])
         users.append(user)
 
