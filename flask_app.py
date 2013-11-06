@@ -69,6 +69,9 @@ def getAllUsers():
         user["_id"] = str(user["_id"])
         users.append(user)
 
+    if not user:
+        logger.error("No users found")
+
     return jsonify(users=users)
 
 
@@ -81,9 +84,13 @@ def addUser():
     lastName = request.form["lastname"]
     password = request.form["password"]
     created = datetime.now()
+    logger.debug("Hashing")
     hash = bcrypt.hashpw(password, bcrypt.gensalt())
 
+    logger.debug("Hashing finished")
+    logger.debug("Trying to find existing user")
     existingUser = mongo.db.users.find({"userName": userName})
+    logger.debug("After user")
 
     if existingUser is None:
         user = User(userName=userName, firstName=firstName, lastName=lastName, password=hash, created=created)
