@@ -27,12 +27,11 @@ class TestHmac(TestCase):
         print sha.hexdigest()
 
         sha2 = sha512("password")
-        print sha.hexdigest() == sha2.hexdigest()
+        self.assertEquals(sha.hexdigest(), sha2.hexdigest())
 
     def test(self):
 
         hash1 = bcrypt.hashpw("Jadda", bcrypt.gensalt())
         hash2 = bcrypt.hashpw("Jadda", hash1)
 
-        print hash1
-        print hash1 == hash2
+        self.assertEquals(hash1, hash2)
