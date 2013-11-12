@@ -1,34 +1,27 @@
 from datetime import datetime
+from flask.ext.restful import fields
+from mongoengine import StringField
+from mongoengine.fields import DateTimeField
 
 __author__ = 'john'
 
 
 class User(object):
-    def __init__(self, **kwargs):
-        self.firstName = kwargs["firstName"]
-        self.lastName = kwargs["lastName"]
-        self.userName = kwargs["userName"]
-        self.password = kwargs["password"]
-        self.created = kwargs["created"]
 
-    def json(self):
-        # if self._id:
-        #     return {
-        #         {
-        #             "id": self._id,
-        #             "firstName": self.firstName,
-        #             "lastName": self.lastName,
-        #             "userName": self.userName,
-        #             "password": self.password,
-        #             "created": self.created
-        #         }
-        #     }
-        return \
-            {
-                "firstName": self.firstName,
-                "lastName": self.lastName,
-                "userName": self.userName,
-                "password": self.password,
-                "created": self.created
-            }
+    firstName = StringField()
+    lastName = StringField()
+    userName = StringField()
+    password = StringField()
+    created = DateTimeField(required=True, default=datetime.now)
+
+    @staticmethod
+    def format():
+        return {
+            "firstName": fields.String,
+            "lastName": fields.String,
+            "userName": fields.String,
+            "password": fields.String,
+            "created": fields.DateTime
+        }
+
 

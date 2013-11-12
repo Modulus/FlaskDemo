@@ -1,24 +1,30 @@
 from datetime import datetime
+from flask.ext.restful import fields
+from mongoengine import Document, ReferenceField, StringField, DateTimeField, BooleanField
+from models.user import User
 
 __author__ = 'john'
 
 
-class Message(object):
-    def __init__(self, **kwargs):
-        self.sender = kwargs["sender"]
-        self.subject = kwargs["subject"]
-        self.message = kwargs["message"]
-        self.receiver = kwargs["receiver"]
-        self.sent = kwargs["sent"]
-        self.read = False
+class Message(Document):
 
-    def json(self):
-        return \
-            {
-                "sender": self.sender,
-                "receiver": self.receiver,
-                "subject": self.subject,
-                "message": self.message,
-                "sent": self.sent,
-                "read": self.read
-            }
+    sender = ReferenceField(User)
+    subject = StringField()
+    message = StringField()
+    receiver = ReferenceField(User)
+    sent = DateTimeField(required=True, default=datetime.now)
+    read = BooleanField()
+
+    @staticmethod
+    def format():
+        return {
+            "sender": fields.Nested(),
+            "subject": fields.String,
+            "message": fields.String,
+        }
+
+    @staticmethod
+    def userFormat():
+        return {
+            "userName": fields.String
+        }
