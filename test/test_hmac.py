@@ -2,7 +2,6 @@ from unittest import TestCase
 from hashlib import sha512
 import hmac
 import binascii
-import binhex
 import bcrypt
 
 __author__ = 'modulus'
