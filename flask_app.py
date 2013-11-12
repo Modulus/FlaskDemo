@@ -100,6 +100,7 @@ def addUser():
         user._id = id
         return jsonify(user.json())
     else:
+        logger.debug("User allready exists")
         return jsonify({"message" : "User allready exists"})
 
 

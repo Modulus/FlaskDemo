@@ -9,7 +9,7 @@ class User(object):
         self.lastName = kwargs["lastName"]
         self.userName = kwargs["userName"]
         self.password = kwargs["password"]
-        self.created = None
+        self.created = kwargs["created"]
 
     def json(self):
         # if self._id:
