@@ -14,6 +14,10 @@ class User(object):
     password = StringField()
     created = DateTimeField(required=True, default=datetime.now)
 
+    meta = {
+        "collection": "users"
+    }
+
     @staticmethod
     def format():
         return {

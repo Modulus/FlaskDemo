@@ -18,7 +18,7 @@ class Message(Document):
     @staticmethod
     def format():
         return {
-            "sender": fields.Nested(),
+            "sender": fields.Nested(Message.userFormat()),
             "subject": fields.String,
             "message": fields.String,
         }
