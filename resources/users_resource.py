@@ -7,7 +7,7 @@ from flask.ext.restful import Resource, Api, fields, marshal_with, reqparse
 from models.user import User
 
 
-class ImageResource(Resource):
+class UsersResource(Resource):
 
     @marshal_with(User.format())
     def get(self):
