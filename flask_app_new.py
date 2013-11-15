@@ -19,3 +19,11 @@ class FlaskApp(object):
                                              "/user/<string:user_id>/friends/")
         self.api.add_resource(MessageResource, "/message/<string:message_id>", "/message/<string:message_id>/")
         self.api.add_resource(MessagesResource, "/messages/<string:user_id>", "/messages/<string:user_id>/")
+
+    def run(self, debug=False):
+        self.app.run(debug=debug)
+
+
+if __name__ == "__main__":
+    app = FlaskApp()
+    app.run(True)

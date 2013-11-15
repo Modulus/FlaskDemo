@@ -1,12 +1,12 @@
 from datetime import datetime
 from flask.ext.restful import fields
-from mongoengine import StringField
+from mongoengine import StringField, Document
 from mongoengine.fields import DateTimeField
 
 __author__ = 'john'
 
 
-class User(object):
+class User(Document):
 
     firstName = StringField()
     lastName = StringField()
