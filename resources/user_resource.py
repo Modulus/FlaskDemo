@@ -1,6 +1,6 @@
 from datetime import datetime
 import bcrypt
-from flask.ext.restful import Resource, reqparse, marshal_with
+from flask.ext.restful import Resource, reqparse, marshal_with, abort
 from models.user import User
 
 __author__ = 'john'
@@ -33,3 +33,19 @@ class UserResource(Resource):
         user.save()
 
         return user
+
+    @marshal_with(User.format())
+    def get(self, id):
+        return User.objects.get(id=id)
+
+    def put(self, user):
+        User.save(user)
+        return user
+
+    def delete(self):
+        id = self.args["id"]
+        if not id:
+            abort(500)
+        else:
+            existingUser = User.objects.get(id=id)
+            existingUser.delete()
