@@ -1,8 +1,7 @@
 __author__ = 'Modulus'
 #coding: utf-8
 
-from flask.ext.restful import Resource, Api, fields, marshal_with, reqparse
-
+from flask.ext.restful import Resource, marshal_with
 
 from models.user import User
 
