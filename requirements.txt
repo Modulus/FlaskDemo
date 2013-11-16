@@ -16,5 +16,4 @@ pymongo==2.6.3
 pytest==2.4.2
 python-bcrypt==0.3.2
 six==1.4.1
-test-pkg==0.0
 wsgiref==0.1.2
