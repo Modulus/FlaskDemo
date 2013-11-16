@@ -33,4 +33,5 @@ class TestHmac(TestCase):
         hash1 = bcrypt.hashpw("Jadda", bcrypt.gensalt())
         hash2 = bcrypt.hashpw("Jadda", hash1)
 
+
         self.assertEquals(hash1, hash2)
