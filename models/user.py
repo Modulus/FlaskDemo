@@ -1,7 +1,10 @@
+from calendar import timegm
+from rfc822 import formatdate
+
 __author__ = 'john'
 
 from datetime import datetime
-from flask.ext.restful import fields
+from flask.ext.restful import fields, types
 from mongoengine import StringField, Document
 from mongoengine.fields import DateTimeField
 
@@ -12,7 +15,7 @@ class User(Document):
     lastName = StringField()
     userName = StringField()
     password = StringField()
-    created = DateTimeField(required=True, default=datetime.now)
+    created = DateTimeField(required=True, default=datetime.now())
 
     meta = {
         "collection": "users"
@@ -25,7 +28,12 @@ class User(Document):
             "lastName": fields.String,
             "userName": fields.String,
             "password": fields.String,
-            "created": fields.DateTime
+            "created": fields.String
         }
+
+# class AllCapsString(fields.DateTime):
+#     def format(self, value):
+#         print value
+#         return formatdate(float(str(value)))
 
 

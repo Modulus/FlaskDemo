@@ -13,7 +13,7 @@ class UserResource(Resource):
         self.parser.add_argument("first_name", type=str, help="First name is required")
         self.parser.add_argument("last_name", type=str, help="Last name is required")
         self.parser.add_argument("user_name", type=str, help="User name is required")
-        self.parser.add_argument("birth_date", type=datetime, help="Your birthday")
+        self.parser.add_argument("creation", type=datetime, help="Your creation")
         self.parser.add_argument("pass", type=str, help="Password is required")
         self.parser.add_argument("id", type=str, help="User id")
         self.args = self.parser.parse_args()
@@ -29,7 +29,6 @@ class UserResource(Resource):
 
         user = User(userName=userName, firstName=firstName, lastName=lastName, created=datetime.now, password=hash)
         user.save()
-
         return user
 
     @marshal_with(User.format())
