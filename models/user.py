@@ -1,9 +1,9 @@
+__author__ = 'john'
+
 from datetime import datetime
 from flask.ext.restful import fields
 from mongoengine import StringField, Document
 from mongoengine.fields import DateTimeField
-
-__author__ = 'john'
 
 
 class User(Document):

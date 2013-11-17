@@ -24,12 +24,10 @@ class UserResource(Resource):
         firstName = self.args["first_name"]
         lastName = self.args["last_name"]
         userName = self.args["user_name"]
-        created = datetime.now()
         passwd = self.args["pass"]
-        created = datetime.now()
         hash = bcrypt.hashpw(passwd, bcrypt.gensalt())
 
-        user = User(userName=userName, firstName=firstName, lastName=lastName, created=created, password=passwd)
+        user = User(userName=userName, firstName=firstName, lastName=lastName, created=datetime.now, password=hash)
         user.save()
 
         return user
