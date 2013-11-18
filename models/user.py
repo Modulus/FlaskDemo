@@ -28,12 +28,8 @@ class User(Document):
             "lastName": fields.String,
             "userName": fields.String,
             "password": fields.String,
-            "created": fields.String
+            "created": fields.DateTime
         }
 
-# class AllCapsString(fields.DateTime):
-#     def format(self, value):
-#         print value
-#         return formatdate(float(str(value)))
 
 

@@ -1,6 +1,7 @@
 from datetime import datetime
 import bcrypt
 from flask.ext.restful import Resource, reqparse, marshal_with, abort
+from mongoengine import DoesNotExist
 from models.user import User
 
 __author__ = 'john'
@@ -25,11 +26,16 @@ class UserResource(Resource):
         lastName = self.args["last_name"]
         userName = self.args["user_name"]
         passwd = self.args["pass"]
+
+
         hash = bcrypt.hashpw(passwd, bcrypt.gensalt())
 
-        user = User(userName=userName, firstName=firstName, lastName=lastName, created=datetime.now, password=hash)
+        user = User(userName=userName, firstName=firstName, lastName=lastName, created=datetime.now(), password=hash)
         user.save()
         return user
+
+
+
 
     @marshal_with(User.format())
     def get(self, id):

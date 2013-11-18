@@ -1,3 +1,5 @@
+import unittest
+
 __author__ = 'modulus'
 
 import json
@@ -14,6 +16,7 @@ class UserResouceTest(TestCase):
     app.config["MONGODB_HOST"] = "locahost"
     app.config["MONGODB_PORT"] = "27017"
     app.config["DEBUG"] = True
+    headers = [('Content-Type', 'application/json')]
 
     connect(app.config["MONGODB_DB"])
     initDb()
@@ -29,7 +32,7 @@ class UserResouceTest(TestCase):
 
     def testPostUser(self):
 
-        result = self.client.post("/user", data={"id": None, "first_name": "John", "last_name": "Skauge", "user_name": "John", "pass": "MyPassword"})
+        result = self.client.post("/user", data={"first_name": "John", "last_name": "Skauge", "user_name": "John", "pass": "MyPassword"})
 
         userDict = json.loads(result.data)
         #Id should not leak out, this user dict is used in the ui
@@ -39,6 +42,14 @@ class UserResouceTest(TestCase):
         self.assertEquals("Skauge", userDict["lastName"])
         self.assertTrue(userDict["password"])
         self.assertTrue(userDict["created"])
+
+    #TODO: Fix this on a later occation
+    @unittest.expectedFailure
+    def testPostUserTwice(self):
+        result1 = self.client.post("/user", data={"first_name": "John", "last_name": "Skauge", "user_name": "John", "pass": "MyPassword"})
+        result2 = self.client.post("/user", data={"first_name": "John", "last_name": "Skauge", "user_name": "John", "pass": "MyPassword"})
+
+        self.fail(msg="Fix this on a later occation")
 
     def testDeleteUser(self):
 
@@ -52,9 +63,6 @@ class UserResouceTest(TestCase):
         self.assertEquals("Skauge", userDict["lastName"])
         self.assertTrue(userDict["password"])
         self.assertTrue(userDict["created"])
-
-
-
 
     def testRawUserSave(self):
         user = User(firstName="John", lastName="Skauge", userName="John", password="MyPassword")
