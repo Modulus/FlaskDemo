@@ -1,10 +1,7 @@
-from calendar import timegm
-from rfc822 import formatdate
-
 __author__ = 'john'
 
 from datetime import datetime
-from flask.ext.restful import fields, types
+from flask.ext.restful import fields
 from mongoengine import StringField, Document
 from mongoengine.fields import DateTimeField
 

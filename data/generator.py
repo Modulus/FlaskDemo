@@ -1,8 +1,9 @@
 #coding: utf-8
-from mongoengine import connect
+from datetime import datetime
+
 from models.message import Message
 from models.user import User
-from datetime import datetime
+
 
 __author__ = 'Modulus'
 

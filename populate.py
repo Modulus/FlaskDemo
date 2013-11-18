@@ -36,51 +36,51 @@ class Populator(object):
                   password=bcrypt.hashpw("kjasdfj8i32", bcrypt.gensalt()))
         u4.created = datetime.now()
 
-        u1._id = db.users.insert(u1.json())
-        u2._id = db.users.insert(u2.json())
-        u3._id = db.users.insert(u3.json())
-        u4._id = db.users.insert(u4.json())
+        u1.save()
+        u2.save()
+        u3.save()
+        u4.save()
 
         m1 = Message(
-            sender=u1._id, subject="First message",
+            sender=u1.id, subject="First message",
             message="This is the first ever message in the system?!",
-            receiver=u4._id,
+            receiver=u4.id,
             sent=datetime.now()
         )
 
         m2 = Message(
-            sender=u4._id, subject="RE: First message",
+            sender=u4.id, subject="RE: First message",
             message="It's awesome isn't it?",
-            receiver=u1._id,
+            receiver=u1.id,
             sent=datetime.now()
         )
 
         m3 = Message(
-            sender=u2._id, subject="Remember, remember",
+            sender=u2.id, subject="Remember, remember",
             message="Remember to buy milk!!!!!!",
-            receiver=u2._id,
+            receiver=u2.id,
             sent=datetime.now()
         )
 
         m4 = Message(
-            sender=u3._id, subject="New project",
+            sender=u3.id, subject="New project",
             message="We need an extra developer for a new ruby project, are you in?",
-            receiver=u2._id,
+            receiver=u2.id,
             sent=datetime.now()
         )
 
         m5 = Message(
-            sender=u2._id, subject="RE: New project",
+            sender=u2.id, subject="RE: New project",
             message="Sure why not, could we have a look at sinatra in that case?",
-            receiver=u4._id,
+            receiver=u4.id,
             sent=datetime.now()
         )
 
-        m1._id = db.messages.insert(m1.json())
-        m2._id = db.messages.insert(m2.json())
-        m3._id = db.messages.insert(m3.json())
-        m4._id = db.messages.insert(m4.json())
-        m5._id = db.messages.insert(m5.json())
+        m1.save()
+        m2.save()
+        m3.save()
+        m4.save()
+        m5.save()
 
 if __name__ == "__main__":
     pop = Populator()

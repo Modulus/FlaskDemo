@@ -5,7 +5,7 @@ __author__ = 'modulus'
 import json
 from unittest import TestCase
 from mongoengine import connect
-from flask_app_new import initApi, initDb, app
+from flask_app import initApi, initDb, app
 from models.user import User
 
 
@@ -66,6 +66,7 @@ class UserResouceTest(TestCase):
 
     def testRawUserSave(self):
         user = User(firstName="John", lastName="Skauge", userName="John", password="MyPassword")
+        # noinspection PyUnresolvedReferences
         self.assertFalse(user.id)
         user.save()
         self.assertTrue(user.id)
