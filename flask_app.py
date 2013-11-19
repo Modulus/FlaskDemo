@@ -21,17 +21,14 @@ if MONGOHQ_URL:
     app.config.setdefault("MONGODB_HOST", url.hostname)
     app.config.setdefault("MONGODB_PORT", url.port)
     app.config.setdefault("MONGODB_DB", url.path[1:])
-
 else:
     # app.config["MONGO_DBNAME"] = "demo"
     app.config.setdefault("MONGODB_HOST",  "localhost")
     app.config.setdefault("MONGODB_PORT",  "27017")
     app.config.setdefault("MONGODB_DB", "demo")
 
-
 def initDb():
     return MongoEngine(app)
-
 
 def initApi():
     api = restful.Api(app)
