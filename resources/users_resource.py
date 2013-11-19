@@ -3,7 +3,7 @@ __author__ = 'Modulus'
 
 from flask.ext.restful import Resource, marshal_with
 
-from models.user import User
+from ..models.user import User
 
 
 class UsersResource(Resource):

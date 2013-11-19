@@ -1,7 +1,7 @@
 from datetime import datetime
 import bcrypt
 from flask.ext.restful import Resource, reqparse, marshal_with, abort
-from models.user import User
+from ..models.user import User
 
 __author__ = 'john'
 

@@ -5,8 +5,10 @@ __author__ = 'modulus'
 import json
 from unittest import TestCase
 from mongoengine import connect
-from flask_app import initApi, initDb, app
-from models.user import User
+from ..flask_app import initApi, initDb, app
+from ..models.user import User
+
+
 
 
 class UserResouceTest(TestCase):

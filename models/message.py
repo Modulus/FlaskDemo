@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask.ext.restful import fields
 from mongoengine import Document, ReferenceField, StringField, DateTimeField, BooleanField
-from models.user import User
+from ..models.user import User
 
 __author__ = 'john'
 
