@@ -1,7 +1,8 @@
 from datetime import datetime
 import bcrypt
 from flask.ext.restful import Resource, reqparse, marshal_with, abort
-from ..models.user import User
+from mongoengine import DoesNotExist, ValidationError
+from models.user import User
 
 __author__ = 'john'
 
@@ -38,8 +39,13 @@ class UserResource(Resource):
 
     @marshal_with(User.format())
     def get(self):
-        user_id = self.args["id"]
-        return User.objects.get(id=user_id)
+        try:
+            user_id = self.args["id"]
+            return User.objects.get(id=user_id)
+        except DoesNotExist:
+            return None
+        except ValidationError:
+            return None
 
     def put(self, user):
         User.save(user)
@@ -50,5 +56,11 @@ class UserResource(Resource):
         if not id:
             abort(500)
         else:
-            existingUser = User.objects.get(id=user_id)
-            existingUser.delete()
+            try:
+                existingUser = User.objects.get(id=user_id)
+                existingUser.delete()
+                return 200
+            except DoesNotExist:
+                abort(500)
+            except ValidationError:
+                abort(500)

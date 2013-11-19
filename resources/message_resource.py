@@ -1,7 +1,7 @@
 __author__ = 'Modulus'
 from flask.ext.restful import Resource, marshal_with, reqparse, abort
 
-from ..models.message import Message
+from models.message import Message
 
 
 class MessageResource(Resource):

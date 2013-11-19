@@ -21,6 +21,7 @@ class User(Document):
     @staticmethod
     def format():
         return {
+            "id": fields.String,
             "firstName": fields.String,
             "lastName": fields.String,
             "userName": fields.String,

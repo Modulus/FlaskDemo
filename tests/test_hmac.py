@@ -3,6 +3,7 @@ from hashlib import sha512
 import hmac
 import binascii
 import bcrypt
+import imp
 
 __author__ = 'modulus'
 
