@@ -1,21 +1,26 @@
 #coding: utf-8
+import bcrypt
+
+__author__ = 'Modulus'
+
 from datetime import datetime
+from mongoengine import connect
 
 from models.message import Message
 from models.user import User
 
 
-__author__ = 'Modulus'
-
 class Populator(object):
 
-
     def clear(self):
+        connect("demo")
         User.drop_collection()
         Message.drop_collection()
 
     def run(self):
 
+
+        connect("demo")
         User.drop_collection()
         Message.drop_collection()
 
@@ -28,25 +33,25 @@ class Populator(object):
         user1.lastName = "Doe"
         user1.birthDate = datetime.now()
         user1.userName = "Creator"
-        user1.passHash = user1.userName
+        user1.password = bcrypt.hashpw(user1.userName, bcrypt.gensalt())
 
         user2.firstName = "Jane"
         user2.lastName = "Doe"
         user2.birthDate = datetime.now()
         user2.userName = "Nemesis"
-        user2.passHash = user2.userName
+        user2.password = bcrypt.hashpw(user2.userName, bcrypt.gensalt())
 
         user3.firstName = "Michelle"
         user3.lastName = "Nielsen"
         user3.birthDate = datetime.now()
         user3.userName = "GoldDigger86"
-        user3.passHash = user3.userName
+        user3.password = bcrypt.hashpw(user3.userName, bcrypt.gensalt())
 
         user4.firstName = "Leif"
         user4.lastName = "Paulsen"
         user4.birthDate = datetime.now()
         user4.userName = "The_Artist"
-        user4.passHash = user4.userName
+        user4.password = bcrypt.hashpw(user4.userName, bcrypt.gensalt())
 
         user1.save()
         user2.save()

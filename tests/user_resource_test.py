@@ -44,6 +44,10 @@ class UserResouceTest(TestCase):
         self.assertTrue(userDict["password"])
         self.assertTrue(userDict["created"])
 
+        result2 = self.client.get("/user/"+userDict["id"])
+        userDict2 = json.loads(result2.data)
+        self.assertTrue(userDict2["id"])
+
     #TODO: Fix this on a later occation
     @unittest.expectedFailure
     def testPostUserTwice(self):
@@ -54,9 +58,9 @@ class UserResouceTest(TestCase):
 
     def testDeleteUser(self):
 
-        result = self.client.post("/user", data={"id": None, "first_name": "John", "last_name": "Skauge", "user_name": "John", "pass": "MyPassword"})
+        result1 = self.client.post("/user", data={"first_name": "John", "last_name": "Skauge", "user_name": "John", "pass": "MyPassword"})
 
-        userDict = json.loads(result.data)
+        userDict = json.loads(result1.data)
         #Id should not leak out, this user dict is used in the ui
         self.assertFalse(hasattr(userDict, "id"), "If this fails the user ID is leaked when created the user. "
                                                   "This should not be returned when creating a user")
@@ -65,7 +69,14 @@ class UserResouceTest(TestCase):
         self.assertTrue(userDict["password"])
         self.assertTrue(userDict["created"])
 
-        result = self.client.delete("/user", data={"id":userDict["id"]})
+        result2 = self.client.delete("/user/"+ userDict["id"])
+
+        self.assertEquals(202, result2.status_code)
+
+
+        result3 = self.client.get("/user/"+userDict["id"])
+
+        self.assertEquals(404, result3.status_code)
 
 
 
