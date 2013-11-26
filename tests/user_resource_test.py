@@ -24,8 +24,7 @@ class UserResourceTest(TestCase):
     initApi()
     client = app.test_client()
 
-    @classmethod
-    def tearDownClass(cls):
+    def tearDown(self):
         User.drop_collection()
 
     def testDB(self):
@@ -78,6 +77,8 @@ class UserResourceTest(TestCase):
         result1 = self.client.post("/user", data={"first_name": "John", "last_name": "Doe", "user_name": "John", "pass":
             "MyPassword"})
         userDict1 = json.loads(result1.data)
+
+        print userDict1
 
         result2 = self.client.put("/user/{}".format(userDict1["id"]), data={"first_name": "John Harald"})
         userDict2 = json.loads(result2.data)
