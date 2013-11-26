@@ -10,17 +10,24 @@ class Message(Document):
 
     sender = ReferenceField(User)
     subject = StringField()
-    message = StringField()
+    text = StringField()
     receiver = ReferenceField(User)
     sent = DateTimeField(required=True, default=datetime.now)
-    read = BooleanField()
+    read = BooleanField(default=False)
+
+    meta = {
+        "collection": "messages"
+    }
 
     @staticmethod
     def format():
         return {
             "sender": fields.Nested(Message.userFormat()),
             "subject": fields.String,
-            "message": fields.String,
+            "text": fields.String,
+            "sent": fields.DateTime,
+            "receiver": fields.Nested(Message.userFormat()),
+            "read": fields.Boolean
         }
 
     @staticmethod

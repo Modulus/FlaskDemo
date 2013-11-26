@@ -7,5 +7,5 @@ class MessagesResource(Resource):
 
 
     @marshal_with(Message.format())
-    def get(self):
-        return list(Message.objects.all())
+    def get(self, user_id):
+        return list(Message.objects.get(sender=user_id))

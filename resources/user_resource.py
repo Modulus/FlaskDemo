@@ -1,6 +1,6 @@
+# coding: utf-8
 from datetime import datetime
 import bcrypt
-from bson import ObjectId
 from flask.ext.restful import Resource, reqparse, marshal_with, abort
 from mongoengine import DoesNotExist, ValidationError
 from models.user import User
@@ -28,12 +28,17 @@ class UserResource(Resource):
         userName = self.args["user_name"]
         passwd = self.args["pass"]
 
+        try:
+            existingUser = User.objects.get(userName=userName)
+            if existingUser.userName:
+                abort(409)
+        except DoesNotExist:
+            passHash = bcrypt.hashpw(passwd, bcrypt.gensalt())
 
-        passHash = bcrypt.hashpw(passwd, bcrypt.gensalt())
+            user = User(userName=userName, firstName=firstName, lastName=lastName, created=datetime.now(), password=passHash)
+            user.save()
+            return user
 
-        user = User(userName=userName, firstName=firstName, lastName=lastName, created=datetime.now(), password=passHash)
-        user.save()
-        return user
 
 
     @marshal_with(User.format())
@@ -43,11 +48,31 @@ class UserResource(Resource):
         except DoesNotExist:
             abort(404)
         except ValidationError:
-            return abort(400)
+            abort(400)
 
-    def put(self, user):
-        User.save(user)
-        return user
+    @marshal_with(User.format())
+    def put(self, id):
+        firstName = self.args["first_name"]
+        lastName = self.args["last_name"]
+        userName = self.args["user_name"]
+        passwd = self.args["pass"]
+
+        try:
+            user = User.objects.get(id=id)
+            if firstName and user.firstName != firstName:
+                user.firstName = firstName
+            if lastName and user.lastName != lastName:
+                user.lastName = lastName
+            if userName and user.userName != userName:
+                user.userName = userName
+            if passwd:
+                passHash = bcrypt.hashpw(passwd, bcrypt.gensalt())
+                user.password = passHash
+            user.save()
+            return user
+        except DoesNotExist:
+            abort(409)
+
 
     def delete(self, id):
         if not id:

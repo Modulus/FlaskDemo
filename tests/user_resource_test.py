@@ -1,3 +1,4 @@
+# coding: utf-8
 import unittest
 
 __author__ = 'modulus'
@@ -9,9 +10,7 @@ from flask_app import initApi, initDb, app
 from models.user import User
 
 
-
-
-class UserResouceTest(TestCase):
+class UserResourceTest(TestCase):
 
     app.config.setdefault("MONGODB_DB", "demo_test")
     app.config["MONGODB_DB"] = "demo_test"
@@ -48,13 +47,11 @@ class UserResouceTest(TestCase):
         userDict2 = json.loads(result2.data)
         self.assertTrue(userDict2["id"])
 
-    #TODO: Fix this on a later occation
-    @unittest.expectedFailure
     def testPostUserTwice(self):
         result1 = self.client.post("/user", data={"first_name": "John", "last_name": "Skauge", "user_name": "John", "pass": "MyPassword"})
         result2 = self.client.post("/user", data={"first_name": "John", "last_name": "Skauge", "user_name": "John", "pass": "MyPassword"})
 
-        self.fail(msg="Fix this on a later occation")
+        self.assertEquals(409, result2.status_code)
 
     def testDeleteUser(self):
 
@@ -73,12 +70,28 @@ class UserResouceTest(TestCase):
 
         self.assertEquals(202, result2.status_code)
 
-
         result3 = self.client.get("/user/"+userDict["id"])
 
         self.assertEquals(404, result3.status_code)
 
+    def testPutUser(self):
+        result1 = self.client.post("/user", data={"first_name": "John", "last_name": "Doe", "user_name": "John", "pass": "MyPassword"})
+        userDict1 = json.loads(result1.data)
 
+        result2 = self.client.put("/user/{id}".format(id=userDict1["id"]), data={"first_name": "John Harald"})
+        userDict2 = json.loads(result2.data)
+
+        self.assertEquals("John Harald", userDict2["firstName"])
+
+        result2 = self.client.put("/user/{id}".format(id=userDict1["id"]), data={"last_name": "XXX"})
+        userDict2 = json.loads(result2.data)
+
+        self.assertEquals("XXX", userDict2["lastName"])
+
+        result2 = self.client.put("/user/{id}".format(id=userDict1["id"]), data={"user_name": "YYYXXX"})
+        userDict2 = json.loads(result2.data)
+
+        self.assertEquals("YYYXXX", userDict2["userName"])
 
     @unittest.expectedFailure
     def testRawUserSave(self):

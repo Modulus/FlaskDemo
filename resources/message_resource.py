@@ -14,9 +14,8 @@ class MessageResource(Resource):
         self.parser.add_argument("sender", type=str, help="Sender of this message")
 
     @marshal_with(Message.format())
-    def get(self):
-        m_id = self.args["id"]
-        return Message.objects.get(id=m_id)
+    def get(self, id):
+        return Message.objects.get(id=id)
 
     def put(self):
         pass

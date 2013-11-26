@@ -27,8 +27,10 @@ else:
     app.config.setdefault("MONGODB_PORT",  "27017")
     app.config.setdefault("MONGODB_DB", "demo")
 
+
 def initDb():
     return MongoEngine(app)
+
 
 def initApi():
     api = restful.Api(app)
@@ -36,7 +38,7 @@ def initApi():
     api.add_resource(UsersResource, "/", "/users", "/user/<string:user_id>/friends",
                      "/user/<string:user_id>/friends/")
     api.add_resource(MessageResource, "/message/<string:message_id>", "/message/<string:message_id>/")
-    api.add_resource(MessagesResource, "/messages/<string:user_id>", "/messages/<string:user_id>/")
+    api.add_resource(MessagesResource, "/messages/<string:user_id>", "/messages/<string:user_id>/", "/messages")
 
     return api
 
