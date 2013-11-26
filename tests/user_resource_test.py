@@ -75,20 +75,21 @@ class UserResourceTest(TestCase):
         self.assertEquals(404, result3.status_code)
 
     def testPutUser(self):
-        result1 = self.client.post("/user", data={"first_name": "John", "last_name": "Doe", "user_name": "John", "pass": "MyPassword"})
+        result1 = self.client.post("/user", data={"first_name": "John", "last_name": "Doe", "user_name": "John", "pass":
+            "MyPassword"})
         userDict1 = json.loads(result1.data)
 
-        result2 = self.client.put("/user/{id}".format(id=userDict1["id"]), data={"first_name": "John Harald"})
+        result2 = self.client.put("/user/{}".format(userDict1["id"]), data={"first_name": "John Harald"})
         userDict2 = json.loads(result2.data)
 
         self.assertEquals("John Harald", userDict2["firstName"])
 
-        result2 = self.client.put("/user/{id}".format(id=userDict1["id"]), data={"last_name": "XXX"})
+        result2 = self.client.put("/user/{}".format(userDict1["id"]), data={"last_name": "XXX"})
         userDict2 = json.loads(result2.data)
 
         self.assertEquals("XXX", userDict2["lastName"])
 
-        result2 = self.client.put("/user/{id}".format(id=userDict1["id"]), data={"user_name": "YYYXXX"})
+        result2 = self.client.put("/user/{}".format(userDict1["id"]), data={"user_name": "YYYXXX"})
         userDict2 = json.loads(result2.data)
 
         self.assertEquals("YYYXXX", userDict2["userName"])
